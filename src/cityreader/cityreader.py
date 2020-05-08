@@ -1,6 +1,13 @@
+import csv
+
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
 
+class City:
+    def __init__(self, name, lat, lon):
+        self.name = name
+        self.lat = lat
+        self.lon = lon
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -20,6 +27,10 @@ def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
+    with open('cities.csv') as csvfile:
+        cities_list = list(csv.reader(csvfile))
+        for city in cities_list[1:]:
+            cities.append(City(city[0], float(city[3]), float(city[4])))
     
     return cities
 
@@ -27,7 +38,7 @@ cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
 for c in cities:
-    print(c)
+    print(f"{c.name}, {c.lat}, {c.lon}")
 
 # STRETCH GOAL!
 #
@@ -67,5 +78,25 @@ def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
+  for city in cities:
+    # outer-if-else attempts to normalize coordinates.
+    if lat1 < lat2 and lon1 < lon2:
+      # inner-if determines if any cities fall within specified coordinates 
+      if city.lat > lat1 and city.lat < lat2 and city.lon > lon1 and city.lon < lon2:
+        within.append(City(city.name, city.lat, city.lon))
+    else:
+      # inner-if determines if any cities fall within specified coordinates
+      if city.lat < lat1 and city.lat > lat2 and city.lon < lon1 and city.lon > lon2:
+        within.append(City(city.name, city.lat, city.lon))
 
   return within
+
+if __name__ == '__main__':
+  lat1 = float(input("Enter lattitude of point 1: "))
+  lon1 = float(input("Enter longitude of point 1: "))
+  lat2 = float(input("Enter lattitude of point 2: "))
+  lon2 = float(input("Enter longitude of point 2: "))
+
+  within_list = cityreader_stretch(lat1, lon1, lat2, lon2, cities)
+  for city in within_list:
+    print(f"{city.name}: ({city.lat}, {city.lon})")
