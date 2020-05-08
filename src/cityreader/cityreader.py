@@ -78,5 +78,25 @@ def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
+  for city in cities:
+    # outer-if-else attempts to normalize coordinates.
+    if lat1 < lat2 and lon1 < lon2:
+      # inner-if determines if any cities fall within specified coordinates 
+      if city.lat > lat1 and city.lat < lat2 and city.lon > lon1 and city.lon < lon2:
+        within.append(City(city.name, city.lat, city.lon))
+    else:
+      # inner-if determines if any cities fall within specified coordinates
+      if city.lat < lat1 and city.lat > lat2 and city.lon < lon1 and city.lon > lon2:
+        within.append(City(city.name, city.lat, city.lon))
 
   return within
+
+if __name__ == '__main__':
+  lat1 = float(input("Enter lattitude of point 1: "))
+  lon1 = float(input("Enter longitude of point 1: "))
+  lat2 = float(input("Enter lattitude of point 2: "))
+  lon2 = float(input("Enter longitude of point 2: "))
+
+  within_list = cityreader_stretch(lat1, lon1, lat2, lon2, cities)
+  for city in within_list:
+    print(f"{city.name}: ({city.lat}, {city.lon})")
